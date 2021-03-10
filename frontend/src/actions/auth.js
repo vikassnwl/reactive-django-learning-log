@@ -10,7 +10,7 @@ import {
   REGISTER_SUCCESS,
 } from "./types";
 
-export const login = (username, password) => (dispatch) => {
+export const login = (username, password, callback) => (dispatch) => {
   const data = {
     username: username,
     password: password,
@@ -23,6 +23,7 @@ export const login = (username, password) => (dispatch) => {
         user_name: res.data.user_name,
       });
     } else {
+      callback(res.data.error);
       dispatch({
         type: LOGIN_FAIL,
       });
@@ -60,7 +61,9 @@ export const checkAuthenticated = () => (dispatch) => {
   });
 };
 
-export const register = (username, password, confirmPassword) => (dispatch) => {
+export const register = (username, password, confirmPassword, callback) => (
+  dispatch
+) => {
   const data = {
     username: username,
     password: password,
@@ -74,6 +77,7 @@ export const register = (username, password, confirmPassword) => (dispatch) => {
         user_name: res.data.user_name,
       });
     } else {
+      callback(res.data.error);
       dispatch({
         type: REGISTER_FAIL,
       });

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { register } from "../actions/auth";
+import $ from "jquery";
 
 function Register({ register, isAuthenticated }) {
   const [username, setUsername] = useState("");
@@ -10,13 +11,24 @@ function Register({ register, isAuthenticated }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    register(username, password, confirmPassword);
+    const alert = (error) => {
+      document.querySelector(".alert").innerHTML = error;
+      document.querySelector(".alert").style.display = "block";
+      $(".container").animate({ left: "10px" }, 50);
+      $(".container").animate({ left: "-10px" }, 50);
+      $(".container").animate({ left: "0px" }, 50);
+      $(".container").animate({ left: "10px" }, 50);
+      $(".container").animate({ left: "-10px" }, 50);
+      $(".container").animate({ left: "0px" }, 50);
+    };
+    register(username, password, confirmPassword, alert);
   };
 
   if (isAuthenticated) return <Redirect to="/dashboard" />;
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 position-relative">
+      <div style={{ display: "none" }} className="alert alert-danger"></div>
       <h1>Register</h1>
       <p>Register for your TODO App account</p>
       <form onSubmit={handleSubmit}>

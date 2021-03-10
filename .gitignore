@@ -4,8 +4,8 @@ Pipfile.lock
 .env
 
 # comment when pushing to github <===> uncomment when pushing to heroku
-# src
-# babel.config.json
-# package-lock.json
-# package.json
-# webpack.config.js
+src
+babel.config.json
+package-lock.json
+package.json
+webpack.config.js

@@ -44,13 +44,14 @@ class LoginView(APIView):
     def post(self, request, format=None):
         username = self.request.data['username']
         password = self.request.data['password']
-
-        user = authenticate(username=username, password=password)
-        if user:
-            if user.is_active:
-                login(request, user)
-                return Response({'success': 'logged in successfully', 'user_id': user.id, 'user_name': user.username})
-        return Response({'error': 'something went wrong when logging in'})
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if user:
+                if user.is_active:
+                    login(request, user)
+                    return Response({'success': 'logged in successfully', 'user_id': user.id, 'user_name': user.username})
+            return Response({'error': 'invalid credentials'})
+        return Response({'error': 'all fields are required'})
 
 
 class LogoutView(APIView):
@@ -86,9 +87,13 @@ class RegisterView(APIView):
         password = self.request.data['password']
         password2 = self.request.data['password2']
 
-        if password == password2:
-            if not User.objects.filter(username=username).exists():
-                user = User.objects.create_user(
-                    username=username, password=password)
-                return Response({'success': 'user created successfully', 'user_id': user.id, 'user_name': user.username})
-        return Response({'error': 'something went wrong when creating user'})
+        if username and password and password2:
+            if password == password2:
+                if not User.objects.filter(username=username).exists():
+                    user = User.objects.create_user(
+                        username=username, password=password)
+                    return Response({'success': 'user created successfully', 'user_id': user.id, 'user_name': user.username})
+                else:
+                    return Response({'error': 'username already taken'})
+            return Response({'error': 'passwords did not match'})
+        return Response({'error': 'all fields are required'})
