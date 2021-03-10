@@ -1,1 +1,15 @@
+node_modules
+.env
 db.sqlite3
+Pipfile
+Pipfile.lock
+
+# comment when pushing to github <===> uncomment when pushing to heroku
+# src
+# babel.config.json
+# package-lock.json
+# package.json
+# webpack.config.js
+
+# make tracked files untracked
+# git rm -r --cached .
