@@ -4,6 +4,13 @@ import { logout } from "../actions/auth";
 import { connect } from "react-redux";
 
 function Navbar({ logout, isAuthenticated, user_name }) {
+  const loader = (loading) => {
+    if (loading) {
+      document.querySelector(".loader").style.display = "block";
+    } else {
+      document.querySelector(".loader").style.display = "none";
+    }
+  };
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <Link className="navbar-brand" to="/">
@@ -32,7 +39,11 @@ function Navbar({ logout, isAuthenticated, user_name }) {
               </li>
 
               <li className="nav-item">
-                <a onClick={logout} className="nav-link" href="#!">
+                <a
+                  onClick={() => logout(loader)}
+                  className="nav-link"
+                  href="#!"
+                >
                   Logout({user_name})
                 </a>
               </li>

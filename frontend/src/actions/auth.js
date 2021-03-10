@@ -10,12 +10,14 @@ import {
   REGISTER_SUCCESS,
 } from "./types";
 
-export const login = (username, password, callback) => (dispatch) => {
+export const login = (username, password, alert, loader) => (dispatch) => {
   const data = {
     username: username,
     password: password,
   };
+  loader(true);
   axios.post("/api/login/", data).then((res) => {
+    loader(false);
     if (res.data.success) {
       dispatch({
         type: LOGIN_SUCCESS,
@@ -23,7 +25,7 @@ export const login = (username, password, callback) => (dispatch) => {
         user_name: res.data.user_name,
       });
     } else {
-      callback(res.data.error);
+      alert(res.data.error);
       dispatch({
         type: LOGIN_FAIL,
       });
@@ -31,8 +33,10 @@ export const login = (username, password, callback) => (dispatch) => {
   });
 };
 
-export const logout = () => (dispatch) => {
+export const logout = (loader) => (dispatch) => {
+  loader(true);
   axios.get("/api/logout/").then((res) => {
+    loader(false);
     if (res.data.success) {
       dispatch({
         type: LOGOUT_SUCCESS,
@@ -45,8 +49,10 @@ export const logout = () => (dispatch) => {
   });
 };
 
-export const checkAuthenticated = () => (dispatch) => {
+export const checkAuthenticated = (loader) => (dispatch) => {
+  loader(true);
   axios.get("/api/check-authenticated/").then((res) => {
+    loader(false);
     if (res.data.success) {
       dispatch({
         type: AUTHENTICATED_SUCCESS,
@@ -61,15 +67,21 @@ export const checkAuthenticated = () => (dispatch) => {
   });
 };
 
-export const register = (username, password, confirmPassword, callback) => (
-  dispatch
-) => {
+export const register = (
+  username,
+  password,
+  confirmPassword,
+  alert,
+  loader
+) => (dispatch) => {
   const data = {
     username: username,
     password: password,
     password2: confirmPassword,
   };
+  loader(true);
   axios.post("/api/register/", data).then((res) => {
+    loader(false);
     if (res.data.success) {
       dispatch({
         type: REGISTER_SUCCESS,
@@ -77,7 +89,7 @@ export const register = (username, password, confirmPassword, callback) => (
         user_name: res.data.user_name,
       });
     } else {
-      callback(res.data.error);
+      alert(res.data.error);
       dispatch({
         type: REGISTER_FAIL,
       });

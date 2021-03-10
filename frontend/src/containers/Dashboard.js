@@ -10,7 +10,9 @@ function Dashboard({ user_id }) {
   const [id, setId] = useState(null);
 
   const refreshList = () => {
+    document.querySelector(".loader").style.display = "block";
     axios.get("/api/users/" + user_id + "/").then((res) => {
+      document.querySelector(".loader").style.display = "none";
       setTasks(res.data.tasks);
       setText("");
       setEditing(false);
@@ -27,7 +29,9 @@ function Dashboard({ user_id }) {
         "X-CSRFToken": Cookies.get("csrftoken"),
       },
     };
+    document.querySelector(".loader").style.display = "block";
     axios.delete("/api/delete-task/" + task.id + "/", config).then(() => {
+      document.querySelector(".loader").style.display = "none";
       refreshList();
     });
   };
@@ -47,7 +51,9 @@ function Dashboard({ user_id }) {
         "X-CSRFToken": Cookies.get("csrftoken"),
       },
     };
+    document.querySelector(".loader").style.display = "block";
     axios.post(url, data, config).then(() => {
+      document.querySelector(".loader").style.display = "none";
       refreshList();
     });
   };

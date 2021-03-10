@@ -23,8 +23,14 @@ function Login({ login, isAuthenticated }) {
       $(".container").animate({ left: "-10px" }, 50);
       $(".container").animate({ left: "0px" }, 50);
     };
-
-    login(username, password, alert);
+    const loader = (loading) => {
+      if (loading) {
+        document.querySelector(".loader").style.display = "block";
+      } else {
+        document.querySelector(".loader").style.display = "none";
+      }
+    };
+    login(username, password, alert, loader);
   };
 
   if (isAuthenticated) return <Redirect to="/dashboard" />;

@@ -21,7 +21,14 @@ function Register({ register, isAuthenticated }) {
       $(".container").animate({ left: "-10px" }, 50);
       $(".container").animate({ left: "0px" }, 50);
     };
-    register(username, password, confirmPassword, alert);
+    const loader = (loading) => {
+      if (loading) {
+        document.querySelector(".loader").style.display = "block";
+      } else {
+        document.querySelector(".loader").style.display = "none";
+      }
+    };
+    register(username, password, confirmPassword, alert, loader);
   };
 
   if (isAuthenticated) return <Redirect to="/dashboard" />;
