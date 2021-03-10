@@ -5,6 +5,7 @@ from .serializers import TaskSerializer, UserSerializer
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
+
 # Create your views here.
 
 
@@ -48,7 +49,7 @@ class LoginView(APIView):
         if user:
             if user.is_active:
                 login(request, user)
-                return Response({'success': 'logged in successfully', 'user_id': user.id})
+                return Response({'success': 'logged in successfully', 'user_id': user.id, 'user_name': user.username})
         return Response({'error': 'something went wrong when logging in'})
 
 
@@ -64,7 +65,7 @@ class LogoutView(APIView):
 class CheckAuthenticatedView(APIView):
     def get(self, request, format=None):
         if request.user.is_authenticated:
-            return Response({'success': 'user is authenticated', 'user_id': request.user.id})
+            return Response({'success': 'user is authenticated', 'user_id': request.user.id, 'user_name': request.user.username})
         return Response({'error': 'user is not authenticated'})
 
 
@@ -77,3 +78,17 @@ class UsersView(APIView):
             user = User.objects.get(pk=pk)
             serializer = UserSerializer(user)
         return Response(serializer.data)
+
+
+class RegisterView(APIView):
+    def post(self, request, format=None):
+        username = self.request.data['username']
+        password = self.request.data['password']
+        password2 = self.request.data['password2']
+
+        if password == password2:
+            if not User.objects.filter(username=username).exists():
+                user = User.objects.create_user(
+                    username=username, password=password)
+                return Response({'success': 'user created successfully', 'user_id': user.id, 'user_name': user.username})
+        return Response({'error': 'something went wrong when creating user'})

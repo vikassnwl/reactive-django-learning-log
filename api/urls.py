@@ -11,4 +11,5 @@ urlpatterns = [
     path('check-authenticated/', views.CheckAuthenticatedView.as_view()),
     path('users/', views.UsersView.as_view()),
     path('users/<int:pk>/', views.UsersView.as_view()),
+    path('register/', views.RegisterView.as_view()),
 ]
