@@ -11,6 +11,7 @@ function Register({ register, isAuthenticated }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    $("input").blur();
     const alert = (error) => {
       document.querySelector(".alert").innerHTML = error;
       document.querySelector(".alert").style.display = "block";

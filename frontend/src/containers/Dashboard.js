@@ -33,6 +33,7 @@ function Dashboard({ user_id }) {
     $(".loader, .overlay").css("display", "block");
     axios.delete("/api/delete-task/" + task.id + "/", config).then(() => {
       $(".loader, .overlay").css("display", "none");
+
       refreshList();
     });
   };
