@@ -23,9 +23,9 @@ function Register({ register, isAuthenticated }) {
     };
     const loader = (loading) => {
       if (loading) {
-        document.querySelector(".loader").style.display = "block";
+        $(".loader, .overlay").css("display", "block");
       } else {
-        document.querySelector(".loader").style.display = "none";
+        $(".loader, .overlay").css("display", "none");
       }
     };
     register(username, password, confirmPassword, alert, loader);

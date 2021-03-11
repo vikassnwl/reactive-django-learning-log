@@ -7,9 +7,9 @@ function Layout({ children, checkAuthenticated }) {
   useEffect(() => {
     const loader = (loading) => {
       if (loading) {
-        document.querySelector(".loader").style.display = "block";
+        $(".loader, .overlay").css("display", "block");
       } else {
-        document.querySelector(".loader").style.display = "none";
+        $(".loader, .overlay").css("display", "none");
       }
     };
     checkAuthenticated(loader);
@@ -27,10 +27,24 @@ function Layout({ children, checkAuthenticated }) {
           left: "50%",
           top: "50%",
           transform: "translate(-50%, -50%)",
-          zIndex: "2",
+          zIndex: "3",
         }}
         src="../../static/images/loader.gif"
       />
+
+      <div
+        className="overlay"
+        style={{
+          display: "none",
+          background: "black",
+          opacity: "0.5",
+          position: "absolute",
+          zIndex: "2",
+          width: "100%",
+          height: "100%",
+        }}
+      ></div>
+
       <Navbar />
       {children}
     </>
