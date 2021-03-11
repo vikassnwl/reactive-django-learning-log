@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { connect } from "react-redux";
+import $ from "jquery";
 
 function Dashboard({ user_id }) {
   const [tasks, setTasks] = useState([]);
@@ -10,9 +11,9 @@ function Dashboard({ user_id }) {
   const [id, setId] = useState(null);
 
   const refreshList = () => {
-    document.querySelector(".loader").style.display = "block";
+    $(".loader, .overlay").css("display", "block");
     axios.get("/api/users/" + user_id + "/").then((res) => {
-      document.querySelector(".loader").style.display = "none";
+      $(".loader, .overlay").css("display", "none");
       setTasks(res.data.tasks);
       setText("");
       setEditing(false);
@@ -29,9 +30,9 @@ function Dashboard({ user_id }) {
         "X-CSRFToken": Cookies.get("csrftoken"),
       },
     };
-    document.querySelector(".loader").style.display = "block";
+    $(".loader, .overlay").css("display", "block");
     axios.delete("/api/delete-task/" + task.id + "/", config).then(() => {
-      document.querySelector(".loader").style.display = "none";
+      $(".loader, .overlay").css("display", "none");
       refreshList();
     });
   };
@@ -51,9 +52,10 @@ function Dashboard({ user_id }) {
         "X-CSRFToken": Cookies.get("csrftoken"),
       },
     };
-    document.querySelector(".loader").style.display = "block";
+
+    $(".loader, .overlay").css("display", "block");
     axios.post(url, data, config).then(() => {
-      document.querySelector(".loader").style.display = "none";
+      $(".loader, .overlay").css("display", "none");
       refreshList();
     });
   };
@@ -75,7 +77,9 @@ function Dashboard({ user_id }) {
         "X-CSRFToken": Cookies.get("csrftoken"),
       },
     };
+    $(".loader, .overlay").css("display", "block");
     axios.post("/api/update-task/" + task.id + "/", data, config).then(() => {
+      $(".loader, .overlay").css("display", "none");
       refreshList();
     });
   };

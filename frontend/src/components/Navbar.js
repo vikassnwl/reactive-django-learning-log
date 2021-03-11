@@ -6,9 +6,9 @@ import { connect } from "react-redux";
 function Navbar({ logout, isAuthenticated, user_name }) {
   const loader = (loading) => {
     if (loading) {
-      document.querySelector(".loader").style.display = "block";
+      $(".loader, .overlay").css("display", "block");
     } else {
-      document.querySelector(".loader").style.display = "none";
+      $(".loader, .overlay").css("display", "none");
     }
   };
   return (
