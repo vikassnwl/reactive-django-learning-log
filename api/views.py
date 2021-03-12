@@ -5,6 +5,9 @@ from .serializers import TaskSerializer, UserSerializer
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.files.storage import default_storage
+from PIL import Image
+import os
+from pathlib import Path
 
 
 # Create your views here.
@@ -21,6 +24,9 @@ class DeleteTaskView(APIView):
     def delete(self, request, format=None, pk=None):
         task = Task.objects.get(pk=pk)
         default_storage.delete(task.item_name)
+        thumbnail_name = ''.join(task.item_name.split(
+            '.')[:-1])+'-thumb.'+''.join(task.item_name.split('.')[-1])
+        default_storage.delete(thumbnail_name)
         task.delete()
         return Response('Task deleted successfully')
 
@@ -105,4 +111,13 @@ class SaveFileView(APIView):
     def post(self, request, format=None):
         file = self.request.FILES['myFile']
         file_name = default_storage.save(file.name, file)
+        BASE_DIR = Path(__file__).resolve().parent.parent
+        print(os.path.join(BASE_DIR, 'media'))
+        thumbnail_name = ''.join(file.name.split(
+            '.')[:-1])+'-thumb.'+''.join(file.name.split('.')[-1])
+        thumb_file = Image.open(file)
+        thumb_file = thumb_file.resize((100, 100), Image.ANTIALIAS)
+        thumb_file.save(os.path.join(BASE_DIR, 'media/'+thumbnail_name),
+                        optimize=True, quality=95)
+        print(thumbnail_name)
         return Response(file_name)

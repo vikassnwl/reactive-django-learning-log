@@ -28,17 +28,19 @@ function Dashboard({ user_id }) {
   }, []);
 
   const handleDelete = (task) => {
-    const config = {
-      headers: {
-        "X-CSRFToken": Cookies.get("csrftoken"),
-      },
-    };
-    $(".loader, .overlay").css("display", "block");
-    axios.delete("/api/delete-task/" + task.id + "/", config).then(() => {
-      $(".loader, .overlay").css("display", "none");
+    if (window.confirm(`'${task.item_name}' will be deleted`)) {
+      const config = {
+        headers: {
+          "X-CSRFToken": Cookies.get("csrftoken"),
+        },
+      };
+      $(".loader, .overlay").css("display", "block");
+      axios.delete("/api/delete-task/" + task.id + "/", config).then(() => {
+        $(".loader, .overlay").css("display", "none");
 
-      refreshList();
-    });
+        refreshList();
+      });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -103,6 +105,7 @@ function Dashboard({ user_id }) {
         "X-CSRFToken": Cookies.get("csrftoken"),
       },
     };
+    $(".loader, .overlay").css("display", "block");
     axios.post("/api/save-file/", fd, config).then((res) => {
       console.log(res);
       const data = {
@@ -111,6 +114,7 @@ function Dashboard({ user_id }) {
         user: user_id,
       };
       axios.post("/api/create-task/", data, config).then((res) => {
+        $(".loader, .overlay").css("display", "none");
         console.log("in create task api");
         console.log(res);
         refreshList();
@@ -160,10 +164,20 @@ function Dashboard({ user_id }) {
             {task.item_type == "file" ? (
               <>
                 <img
-                  style={{ width: "100px", height: "100px" }}
-                  src={`/api/media/${task.item_name}/`}
+                  className=""
+                  src={`/api/media/${
+                    task.item_name
+                      .split(".")
+                      .slice(0, task.item_name.split(".").length - 1)
+                      .join() +
+                    "-thumb." +
+                    task.item_name
+                      .split(".")
+                      .slice(task.item_name.split(".").length - 1)
+                  }/`}
                 />
-                {task.item_name}
+
+                <span>{task.item_name}</span>
               </>
             ) : (
               <span
