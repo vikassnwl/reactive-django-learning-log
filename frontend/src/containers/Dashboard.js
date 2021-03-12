@@ -28,6 +28,7 @@ function Dashboard({ user_id }) {
   }, []);
 
   const handleDelete = (task) => {
+    if (window.confirm(`'${task.item_name}' will be deleted`)){
     if (window.confirm(`'${task.item_name}' will be deleted`)) {
       const config = {
         headers: {
@@ -41,7 +42,8 @@ function Dashboard({ user_id }) {
         refreshList();
       });
     }
-  };
+  }
+}
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -164,7 +166,8 @@ function Dashboard({ user_id }) {
             {task.item_type == "file" ? (
               <>
                 <img
-                  className=""
+                style={{display: "block"}}
+                  className="mb-2"
                   src={`/api/media/${
                     task.item_name
                       .split(".")
@@ -176,7 +179,7 @@ function Dashboard({ user_id }) {
                       .slice(task.item_name.split(".").length - 1)
                   }/`}
                 />
-
+          
                 <span>{task.item_name}</span>
               </>
             ) : (
