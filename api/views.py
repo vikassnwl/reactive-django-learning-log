@@ -4,6 +4,7 @@ from .models import Task
 from .serializers import TaskSerializer, UserSerializer
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.core.files.storage import default_storage
 
 
 # Create your views here.
@@ -19,6 +20,7 @@ class TasksView(APIView):
 class DeleteTaskView(APIView):
     def delete(self, request, format=None, pk=None):
         task = Task.objects.get(pk=pk)
+        default_storage.delete(task.item_name)
         task.delete()
         return Response('Task deleted successfully')
 
@@ -97,3 +99,10 @@ class RegisterView(APIView):
                     return Response({'error': 'username already taken'})
             return Response({'error': 'passwords did not match'})
         return Response({'error': 'all fields are required'})
+
+
+class SaveFileView(APIView):
+    def post(self, request, format=None):
+        file = self.request.FILES['myFile']
+        file_name = default_storage.save(file.name, file)
+        return Response(file_name)

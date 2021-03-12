@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { connect } from "react-redux";
 import $ from "jquery";
+import { Link } from "react-router-dom";
 
 function Dashboard({ user_id }) {
   const [tasks, setTasks] = useState([]);
   const [text, setText] = useState("");
   const [editing, setEditing] = useState(false);
   const [id, setId] = useState(null);
+
+  const inputRef = useRef(null);
 
   const refreshList = () => {
     $(".loader, .overlay").css("display", "block");
@@ -41,7 +44,7 @@ function Dashboard({ user_id }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = {
-      task_name: text,
+      item_name: text,
       user: user_id,
     };
     let url = "/api/create-task/";
@@ -69,7 +72,7 @@ function Dashboard({ user_id }) {
 
   const handleStrike = (task) => {
     const data = {
-      task_name: task.task_name,
+      item_name: task.item_name,
       isCompleted: !task.isCompleted,
       user: user_id,
     };
@@ -85,9 +88,45 @@ function Dashboard({ user_id }) {
     });
   };
 
+  const handleFileSelect = (e) => {
+    e.preventDefault();
+    inputRef.current.click();
+  };
+
+  const handleFileChange = (e) => {
+    console.log(e.target.files[0]);
+    const file = e.target.files[0];
+    const fd = new FormData();
+    fd.append("myFile", file, file.name);
+    const config = {
+      headers: {
+        "X-CSRFToken": Cookies.get("csrftoken"),
+      },
+    };
+    axios.post("/api/save-file/", fd, config).then((res) => {
+      console.log(res);
+      const data = {
+        item_name: res.data,
+        item_type: "file",
+        user: user_id,
+      };
+      axios.post("/api/create-task/", data, config).then((res) => {
+        console.log("in create task api");
+        console.log(res);
+        refreshList();
+      });
+    });
+  };
+
+  // ========================================================================================
+  // =================================== Returning JSX ======================================
+  // ========================================================================================
+
   return (
     <div className="container mt-5">
       <h1>TODO App</h1>
+
+      {/* ==========================FORM BEGINS========================== */}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <input
@@ -99,26 +138,59 @@ function Dashboard({ user_id }) {
           />
         </div>
         <div className="form-group">
-          <input value="Add" type="submit" className="btn btn-primary" />
+          <button className="btn btn-primary fa fa-send mr-2" />
+          <input
+            onChange={handleFileChange}
+            ref={inputRef}
+            style={{ display: "none" }}
+            type="file"
+          />
+          <button
+            onClick={handleFileSelect}
+            className="btn btn-secondary fa fa-paperclip"
+          />
         </div>
       </form>
+      {/* ==========================FORM ENDS========================== */}
+
+      {/* ==========================LIST BEGINS========================== */}
       <ul className="list-group mt-5">
         {tasks.map((task) => (
           <li className="list-group-item">
-            <span
-              style={{
-                cursor: "pointer",
-                textDecoration: task.isCompleted && "line-through",
-              }}
-              onClick={() => handleStrike(task)}
-            >
-              {task.task_name}
-            </span>
+            {task.item_type == "file" ? (
+              <>
+                <img
+                  style={{ width: "100px", height: "100px" }}
+                  src={`/api/media/${task.item_name}/`}
+                />
+                {task.item_name}
+              </>
+            ) : (
+              <span
+                style={{
+                  cursor: "pointer",
+                  textDecoration: task.isCompleted && "line-through",
+                }}
+                onClick={() => handleStrike(task)}
+              >
+                {task.item_name}
+              </span>
+            )}
+
             <span className="float-right">
-              <button
-                onClick={() => handleUpdate(task)}
-                className="fa fa-edit btn btn-info mr-2"
-              />
+              {task.item_type == "file" ? (
+                <button
+                  onClick={() =>
+                    (window.location.href = `/api/media/${task.item_name}/`)
+                  }
+                  className="fa fa-eye btn btn-success mr-2"
+                />
+              ) : (
+                <button
+                  onClick={() => handleUpdate(task)}
+                  className="fa fa-edit btn btn-info mr-2"
+                />
+              )}
               <button
                 onClick={() => handleDelete(task)}
                 className="fa fa-trash btn btn-danger"
@@ -127,6 +199,7 @@ function Dashboard({ user_id }) {
           </li>
         ))}
       </ul>
+      {/* ==========================LIST ENDS========================== */}
     </div>
   );
 }

@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('tasks/', views.TasksView.as_view()),
@@ -12,4 +14,5 @@ urlpatterns = [
     path('users/', views.UsersView.as_view()),
     path('users/<int:pk>/', views.UsersView.as_view()),
     path('register/', views.RegisterView.as_view()),
-]
+    path('save-file/', views.SaveFileView.as_view()),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
