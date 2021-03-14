@@ -12,57 +12,58 @@ function Navbar({ logout, isAuthenticated, user_name }) {
     }
   };
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <Link className="navbar-brand" to="/">
-        TODO App
-      </Link>
-      <button
-        className="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span className="navbar-toggler-icon"></span>
-      </button>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <Link class="navbar-brand" to="/">
+          TODO App
+        </Link>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            {isAuthenticated ? (
+              <>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/dashboard">
+                    Dashboard <span className="sr-only">(current)</span>
+                  </NavLink>
+                </li>
 
-      <div className="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul className="navbar-nav mr-auto">
-          {isAuthenticated ? (
-            <>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/dashboard">
-                  Dashboard <span className="sr-only">(current)</span>
-                </NavLink>
-              </li>
-
-              <li className="nav-item">
-                <a
-                  onClick={() => logout(loader)}
-                  className="nav-link"
-                  href="#!"
-                >
-                  Logout({user_name})
-                </a>
-              </li>
-            </>
-          ) : (
-            <>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/login">
-                  Login
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/register">
-                  Register
-                </NavLink>
-              </li>
-            </>
-          )}
-        </ul>
+                <li className="nav-item">
+                  <a
+                    onClick={() => logout(loader)}
+                    className="nav-link"
+                    href="#!"
+                  >
+                    Logout({user_name})
+                  </a>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/login">
+                    Login
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/register">
+                    Register
+                  </NavLink>
+                </li>
+              </>
+            )}
+          </ul>
+        </div>
       </div>
     </nav>
   );

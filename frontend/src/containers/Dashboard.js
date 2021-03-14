@@ -3,7 +3,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { connect } from "react-redux";
 import $ from "jquery";
-import { Link } from "react-router-dom";
+import { thumb_name } from "../utils";
 
 function Dashboard({ user_id }) {
   const [tasks, setTasks] = useState([]);
@@ -12,6 +12,12 @@ function Dashboard({ user_id }) {
   const [id, setId] = useState(null);
 
   const inputRef = useRef(null);
+
+  const config = {
+    headers: {
+      "X-CSRFToken": Cookies.get("csrftoken"),
+    },
+  };
 
   const refreshList = () => {
     $(".loader, .overlay").css("display", "block");
@@ -28,13 +34,7 @@ function Dashboard({ user_id }) {
   }, []);
 
   const handleDelete = (task) => {
-    if (window.confirm(`'${task.item_name}' will be deleted`)){
     if (window.confirm(`'${task.item_name}' will be deleted`)) {
-      const config = {
-        headers: {
-          "X-CSRFToken": Cookies.get("csrftoken"),
-        },
-      };
       $(".loader, .overlay").css("display", "block");
       axios.delete("/api/delete-task/" + task.id + "/", config).then(() => {
         $(".loader, .overlay").css("display", "none");
@@ -42,8 +42,7 @@ function Dashboard({ user_id }) {
         refreshList();
       });
     }
-  }
-}
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -55,11 +54,6 @@ function Dashboard({ user_id }) {
     if (editing) {
       url = "/api/update-task/" + id + "/";
     }
-    const config = {
-      headers: {
-        "X-CSRFToken": Cookies.get("csrftoken"),
-      },
-    };
 
     $(".loader, .overlay").css("display", "block");
     axios.post(url, data, config).then(() => {
@@ -80,11 +74,7 @@ function Dashboard({ user_id }) {
       isCompleted: !task.isCompleted,
       user: user_id,
     };
-    const config = {
-      headers: {
-        "X-CSRFToken": Cookies.get("csrftoken"),
-      },
-    };
+
     $(".loader, .overlay").css("display", "block");
     axios.post("/api/update-task/" + task.id + "/", data, config).then(() => {
       $(".loader, .overlay").css("display", "none");
@@ -100,13 +90,10 @@ function Dashboard({ user_id }) {
   const handleFileChange = (e) => {
     console.log(e.target.files[0]);
     const file = e.target.files[0];
+    e.target.value = "";
     const fd = new FormData();
     fd.append("myFile", file, file.name);
-    const config = {
-      headers: {
-        "X-CSRFToken": Cookies.get("csrftoken"),
-      },
-    };
+
     $(".loader, .overlay").css("display", "block");
     axios.post("/api/save-file/", fd, config).then((res) => {
       console.log(res);
@@ -124,27 +111,21 @@ function Dashboard({ user_id }) {
     });
   };
 
-  // ========================================================================================
-  // =================================== Returning JSX ======================================
-  // ========================================================================================
-
   return (
     <div className="container mt-5">
-      <h1>TODO App</h1>
+      <h1 className="display-4">TODO App</h1>
 
-      {/* ==========================FORM BEGINS========================== */}
       <form onSubmit={handleSubmit}>
+        <input
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          type="text"
+          className="form-control mb-2"
+          placeholder="New Task"
+        />
+
         <div className="form-group">
-          <input
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            type="text"
-            className="form-control"
-            placeholder="New Task"
-          />
-        </div>
-        <div className="form-group">
-          <button className="btn btn-primary fa fa-send mr-2" />
+          <button className="btn btn-outline-primary fa fa-send me-2" />
           <input
             onChange={handleFileChange}
             ref={inputRef}
@@ -153,33 +134,22 @@ function Dashboard({ user_id }) {
           />
           <button
             onClick={handleFileSelect}
-            className="btn btn-secondary fa fa-paperclip"
+            className="btn btn-outline-secondary fa fa-paperclip"
           />
         </div>
       </form>
-      {/* ==========================FORM ENDS========================== */}
 
-      {/* ==========================LIST BEGINS========================== */}
       <ul className="list-group mt-5">
         {tasks.map((task) => (
           <li className="list-group-item">
             {task.item_type == "file" ? (
               <>
                 <img
-                style={{display: "block"}}
+                  style={{ display: "block" }}
                   className="mb-2"
-                  src={`/api/media/${
-                    task.item_name
-                      .split(".")
-                      .slice(0, task.item_name.split(".").length - 1)
-                      .join() +
-                    "-thumb." +
-                    task.item_name
-                      .split(".")
-                      .slice(task.item_name.split(".").length - 1)
-                  }/`}
+                  src={`/api/media/${thumb_name(task.item_name)}/`}
                 />
-          
+
                 <span>{task.item_name}</span>
               </>
             ) : (
@@ -187,6 +157,7 @@ function Dashboard({ user_id }) {
                 style={{
                   cursor: "pointer",
                   textDecoration: task.isCompleted && "line-through",
+                  verticalAlign: "center",
                 }}
                 onClick={() => handleStrike(task)}
               >
@@ -194,29 +165,26 @@ function Dashboard({ user_id }) {
               </span>
             )}
 
-            <span className="float-right">
+            <span style={{ float: "right" }}>
               {task.item_type == "file" ? (
-                <button
-                  onClick={() =>
-                    (window.location.href = `/api/media/${task.item_name}/`)
-                  }
-                  className="fa fa-eye btn btn-success mr-2"
+                <a
+                  href={`/api/media/${task.item_name}/`}
+                  className="fa fa-eye btn btn-outline-success me-2"
                 />
               ) : (
                 <button
                   onClick={() => handleUpdate(task)}
-                  className="fa fa-edit btn btn-info mr-2"
+                  className="fa fa-edit btn btn-outline-info me-2"
                 />
               )}
               <button
                 onClick={() => handleDelete(task)}
-                className="fa fa-trash btn btn-danger"
+                className="fa fa-trash btn btn-outline-danger"
               />
             </span>
           </li>
         ))}
       </ul>
-      {/* ==========================LIST ENDS========================== */}
     </div>
   );
 }

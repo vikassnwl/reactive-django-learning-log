@@ -40,39 +40,36 @@ function Register({ register, isAuthenticated }) {
       <h1>Register</h1>
       <p>Register for your TODO App account</p>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="username">Username:</label>
-          <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            id="username"
-            type="text"
-            className="form-control"
-            placeholder="Username*"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
-          <input
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            id="password"
-            type="password"
-            className="form-control"
-            placeholder="Password*"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="confirm-password">Confirm Password:</label>
-          <input
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            id="confirm-password"
-            type="password"
-            className="form-control"
-            placeholder="Confirm Password*"
-          />
-        </div>
+        <label htmlFor="username">Username:</label>
+        <input
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          id="username"
+          type="text"
+          className="form-control mb-3"
+          placeholder="Username*"
+        />
+
+        <label htmlFor="password">Password:</label>
+        <input
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          id="password"
+          type="password"
+          className="form-control mb-3"
+          placeholder="Password*"
+        />
+
+        <label htmlFor="confirm-password">Confirm Password:</label>
+        <input
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          id="confirm-password"
+          type="password"
+          className="form-control mb-3"
+          placeholder="Confirm Password*"
+        />
+
         <div className="form-group">
           <input value="Register" type="submit" className="btn btn-primary" />
         </div>

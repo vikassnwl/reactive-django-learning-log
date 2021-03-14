@@ -38,31 +38,29 @@ function Login({ login, isAuthenticated }) {
   return (
     <div className="container mt-5 position-relative">
       <div style={{ display: "none" }} className="alert alert-danger"></div>
-      <h1>Login</h1>
+      <h1 className="display-6">Login</h1>
       <p>Login to your TODO App account</p>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="username">Username:</label>
-          <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            id="username"
-            type="text"
-            className="form-control"
-            placeholder="Username*"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
-          <input
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            id="password"
-            type="password"
-            className="form-control"
-            placeholder="Password*"
-          />
-        </div>
+        <label htmlFor="username">Username:</label>
+        <input
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          id="username"
+          type="text"
+          className="form-control mb-3"
+          placeholder="Username*"
+        />
+
+        <label htmlFor="password">Password:</label>
+        <input
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          id="password"
+          type="password"
+          className="form-control mb-3"
+          placeholder="Password*"
+        />
+
         <div className="form-group">
           <input value="Login" type="submit" className="btn btn-primary" />
         </div>
