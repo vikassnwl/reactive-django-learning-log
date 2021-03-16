@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 class Task(models.Model):
     ITEM_CHOICES = (
         ('task', 'Task'),
-        ('file', 'File')
+        ('file', 'File'),
+        ('folder', 'Folder')
     )
 
     item_type = models.CharField(

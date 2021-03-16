@@ -10,6 +10,7 @@ function Dashboard({ user_id }) {
   const [text, setText] = useState("");
   const [editing, setEditing] = useState(false);
   const [id, setId] = useState(null);
+  const [itemType, setItemType] = useState("task");
 
   const inputRef = useRef(null);
 
@@ -46,8 +47,10 @@ function Dashboard({ user_id }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const data = {
       item_name: text,
+      item_type: itemType,
       user: user_id,
     };
     let url = "/api/create-task/";
@@ -125,13 +128,21 @@ function Dashboard({ user_id }) {
         />
 
         <div className="form-group">
-          <button className="btn btn-outline-primary fa fa-send me-2" />
+          <button
+            onClick={() => setItemType("task")}
+            className="btn btn-outline-primary fa fa-send me-2"
+          />
           <input
             onChange={handleFileChange}
             ref={inputRef}
             style={{ display: "none" }}
             type="file"
           />
+          <button
+            onClick={() => setItemType("folder")}
+            class="btn btn-outline-dark fas fa-folder-plus me-2"
+          />
+
           <button
             onClick={handleFileSelect}
             className="btn btn-outline-secondary fa fa-paperclip"
@@ -151,6 +162,11 @@ function Dashboard({ user_id }) {
                 />
 
                 <span>{task.item_name}</span>
+              </>
+            ) : task.item_name == "folder" ? (
+              <>
+                <i class="fa fa-folder-o me-2" aria-hidden="true"></i>
+                {task.item_name}
               </>
             ) : (
               <span
