@@ -12,7 +12,7 @@ function Home({ isAuthenticated }) {
         {isAuthenticated ? (
           <>
             <p>Click the button below to go to dashboard</p>
-            <Link to="/dashboard" className="btn btn-primary btn-lg">
+            <Link to="/dashboard/0" className="btn btn-primary btn-lg">
               Dashboard
             </Link>
           </>

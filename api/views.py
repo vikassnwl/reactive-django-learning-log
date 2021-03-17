@@ -22,12 +22,24 @@ class TasksView(APIView):
 
 
 class DeleteTaskView(APIView):
+
+    def delete_recursively(self, tasks):
+        for task in tasks:
+            tasks_ = Task.objects.filter(parent_id=task.id)
+            task.delete()
+            if tasks_:
+                return self.delete_recursively(tasks_)
+
     def delete(self, request, format=None, pk=None):
         task = Task.objects.get(pk=pk)
         if task.item_type == 'file':
             file, ext = os.path.splitext(task.item_name)
             default_storage.delete(task.item_name)
             default_storage.delete(file+'-thumb'+ext)
+
+        tasks = Task.objects.filter(parent_id=pk)
+        self.delete_recursively(tasks)
+
         task.delete()
         return Response('Task deleted successfully')
 
