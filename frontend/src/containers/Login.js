@@ -33,7 +33,7 @@ function Login({ login, isAuthenticated }) {
     login(username, password, alert, loader);
   };
 
-  if (isAuthenticated) return <Redirect to="/dashboard" />;
+  if (isAuthenticated) return <Redirect to="/dashboard/0" />;
 
   return (
     <div className="container mt-5 position-relative">

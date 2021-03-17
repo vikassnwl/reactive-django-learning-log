@@ -17,7 +17,11 @@ export default class App extends Component {
         <Router>
           <Layout>
             <Route exact path="/" component={Home} />
-            <PrivateRoute exact path="/dashboard" component={Dashboard} />
+            <PrivateRoute
+              exact
+              path="/dashboard/:parent_id"
+              component={Dashboard}
+            />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
           </Layout>

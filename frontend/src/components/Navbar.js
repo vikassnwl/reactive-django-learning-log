@@ -33,7 +33,7 @@ function Navbar({ logout, isAuthenticated, user_name }) {
             {isAuthenticated ? (
               <>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/dashboard">
+                  <NavLink className="nav-link" to="/dashboard/0">
                     Dashboard <span className="sr-only">(current)</span>
                   </NavLink>
                 </li>
