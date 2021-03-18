@@ -11,7 +11,8 @@ function Dashboard(props) {
   const [text, setText] = useState("");
   const [editing, setEditing] = useState(false);
   const [id, setId] = useState(null);
-  const [itemType, setItemType] = useState("task");
+  // const [itemType, setItemType] = useState("task");
+  const [checked, setChecked] = useState(false);
 
   const inputRef = useRef(null);
 
@@ -51,7 +52,10 @@ function Dashboard(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    let itemType = "task";
+    if (checked) {
+      itemType = "folder";
+    }
     const data = {
       item_name: text,
       item_type: itemType,
@@ -108,6 +112,7 @@ function Dashboard(props) {
       const data = {
         item_name: res.data,
         item_type: "file",
+        parent_id: parent_id,
         user: props.user_id,
       };
       axios.post("/api/create-task/", data, config).then((res) => {
@@ -121,7 +126,7 @@ function Dashboard(props) {
 
   return (
     <div className="container mt-5">
-      <h1 className="display-4">TODO App</h1>
+      <h1 className="display-4">Notes</h1>
 
       <form onSubmit={handleSubmit}>
         <input
@@ -129,30 +134,38 @@ function Dashboard(props) {
           onChange={(e) => setText(e.target.value)}
           type="text"
           className="form-control mb-2"
-          placeholder="New Task"
+          placeholder="New Note"
         />
 
-        <div className="form-group">
-          <button
-            onClick={() => setItemType("task")}
-            className="btn btn-outline-primary fa fa-send me-2"
-          />
+        <div style={{ display: "inline-block" }} class="form-check me-2">
           <input
-            onChange={handleFileChange}
-            ref={inputRef}
-            style={{ display: "none" }}
-            type="file"
+            onChange={(e) => setChecked(e.target.checked)}
+            type="checkbox"
+            class="form-check-input"
+            id="exampleCheck1"
           />
-          <button
+          <label class="form-check-label" for="exampleCheck1">
+            isFolder
+          </label>
+        </div>
+        <button
+          onClick={() => setItemType("task")}
+          className="btn btn-outline-primary fa fa-send me-2"
+        />
+        <input
+          onChange={handleFileChange}
+          ref={inputRef}
+          style={{ display: "none" }}
+          type="file"
+        />
+        <button
+          onClick={handleFileSelect}
+          className="btn btn-outline-secondary fa fa-paperclip"
+        />
+        {/* <button
             onClick={() => setItemType("folder")}
             class="btn btn-outline-dark fas fa-folder-plus me-2"
-          />
-
-          <button
-            onClick={handleFileSelect}
-            className="btn btn-outline-secondary fa fa-paperclip"
-          />
-        </div>
+          /> */}
       </form>
 
       <ul className="list-group mt-5">

@@ -15,7 +15,7 @@ function Navbar({ logout, isAuthenticated, user_name }) {
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
         <Link class="navbar-brand" to="/">
-          TODO App
+          Notes
         </Link>
         <button
           class="navbar-toggler"
