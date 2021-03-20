@@ -106,12 +106,22 @@ function Entries(props) {
       <h1 className="display-4">Entries</h1>
 
       <form onSubmit={handleSubmit}>
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="form-control mb-2"
-          placeholder="New Entry"
-        />
+        {topic.type === "tasks" ? (
+          <input
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            className="form-control mb-2"
+            placeholder="New Entry"
+          />
+        ) : (
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            className="form-control mb-2"
+            placeholder="New Entry"
+          />
+        )}
 
         <button className="btn btn-outline-primary fa fa-send me-2" />
       </form>

@@ -90,7 +90,7 @@ function Dashboard(props) {
         <button className="btn btn-outline-primary fa fa-send me-4" />
         <label className="me-2">Type:</label>
         <select value={option} onChange={handleOption}>
-          <option></option>
+          <option>--select--</option>
           <option value="tasks">Tasks</option>
         </select>
       </form>
