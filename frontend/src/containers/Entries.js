@@ -1,20 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { connect } from "react-redux";
 import $ from "jquery";
-import { thumb_name } from "../utils";
-import { Link } from "react-router-dom";
 
 function Entries(props) {
-  const [entries, setEntries] = useState([]);
+  const [topic, setTopic] = useState({ entry_set: [] });
   const [text, setText] = useState("");
   const [editing, setEditing] = useState(false);
   const [id, setId] = useState(null);
-
-  const [checked, setChecked] = useState(false);
-
-  const inputRef = useRef(null);
 
   const { topic_id } = props.match.params;
 
@@ -29,9 +23,7 @@ function Entries(props) {
     axios.get("/api/users/" + props.user_id + "/").then((res) => {
       $(".loader, .overlay").css("display", "none");
 
-      setEntries(
-        res.data.topic_set.filter((topic) => topic.id == topic_id)[0].entry_set
-      );
+      setTopic(res.data.topic_set.filter((topic) => topic.id == topic_id)[0]);
       setText("");
       setEditing(false);
     });
@@ -77,6 +69,21 @@ function Entries(props) {
     setId(entry.id);
   };
 
+  const handleStrike = (entry) => {
+    const data = {
+      ...entry,
+      isCompleted: !entry.isCompleted,
+    };
+
+    const url = "/api/update-entry/" + entry.id + "/";
+
+    $(".loader, .overlay").css("display", "block");
+    axios.post(url, data, config).then(() => {
+      $(".loader, .overlay").css("display", "none");
+      refreshList();
+    });
+  };
+
   const handleLinks = (words) => {
     let result2 = [];
     let result = [];
@@ -110,20 +117,38 @@ function Entries(props) {
       </form>
 
       <ul className="list-group mt-5">
-        {entries.map((entry) => (
+        {topic.entry_set.map((entry) => (
           <li key={entry.id} className="list-group-item">
-            <div
-              style={{ display: "inline", wordWrap: "break-word" }}
-              dangerouslySetInnerHTML={{
-                __html: handleLinks(
-                  entry.content
-                    .split(" ")
-                    .join("&nbsp;")
-                    .split("\n")
-                    .join("<br />")
-                ),
-              }}
-            />
+            {topic.type === "tasks" ? (
+              <span
+                onClick={() => handleStrike(entry)}
+                style={{
+                  textDecoration: entry.isCompleted && "line-through",
+                  cursor: "pointer",
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: handleLinks(
+                    entry.content
+                      .split(" ")
+                      .join("&nbsp;")
+                      .split("\n")
+                      .join("<br />")
+                  ),
+                }}
+              />
+            ) : (
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: handleLinks(
+                    entry.content
+                      .split(" ")
+                      .join("&nbsp;")
+                      .split("\n")
+                      .join("<br />")
+                  ),
+                }}
+              />
+            )}
 
             <span style={{ float: "right" }}>
               <button

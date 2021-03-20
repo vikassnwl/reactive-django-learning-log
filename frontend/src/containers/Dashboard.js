@@ -11,12 +11,7 @@ function Dashboard(props) {
   const [text, setText] = useState("");
   const [editing, setEditing] = useState(false);
   const [id, setId] = useState(null);
-
-  const [checked, setChecked] = useState(false);
-
-  const inputRef = useRef(null);
-
-  const { parent_id } = props.match.params;
+  const [option, setOption] = useState("");
 
   const config = {
     headers: {
@@ -55,6 +50,7 @@ function Dashboard(props) {
     const data = {
       name: text,
       user: props.user_id,
+      type: option,
     };
     let url = "/api/create-topic/";
     if (editing) {
@@ -74,11 +70,9 @@ function Dashboard(props) {
     setId(topic.id);
   };
 
-  // $(".loader, .overlay").css("display", "block");
-  // axios.post("/api/update-task/" + task.id + "/", data, config).then(() => {
-  //   $(".loader, .overlay").css("display", "none");
-  //   refreshList();
-  // });
+  const handleOption = (e) => {
+    setOption(e.target.value);
+  };
 
   return (
     <div className="container mt-5">
@@ -93,7 +87,12 @@ function Dashboard(props) {
           placeholder="New Topic"
         />
 
-        <button className="btn btn-outline-primary fa fa-send me-2" />
+        <button className="btn btn-outline-primary fa fa-send me-4" />
+        <label className="me-2">Type:</label>
+        <select value={option} onChange={handleOption}>
+          <option></option>
+          <option value="tasks">Tasks</option>
+        </select>
       </form>
 
       <ul className="list-group mt-5">
@@ -104,9 +103,13 @@ function Dashboard(props) {
               style={{ textDecoration: "none" }}
             >
               <i className="fa fa-folder-o me-2" />
-              {topic.name}
+              <span className="me-2">{topic.name}</span>
             </Link>
-
+            {topic.type === "tasks" && (
+              <span className="badge rounded-pill bg-dark text-light">
+                Tasks
+              </span>
+            )}
             <span style={{ float: "right" }}>
               <button
                 onClick={() => handleUpdate(topic)}
