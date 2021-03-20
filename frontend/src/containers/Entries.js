@@ -117,8 +117,10 @@ function Entries(props) {
               dangerouslySetInnerHTML={{
                 __html: handleLinks(
                   entry.content
-                    .replaceAll(" ", "&nbsp;")
-                    .replaceAll("\n", "<br />")
+                    .split(" ")
+                    .join("&nbsp;")
+                    .split("\n")
+                    .join("<br />")
                 ),
               }}
             />
