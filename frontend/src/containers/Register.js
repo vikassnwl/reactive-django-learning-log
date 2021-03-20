@@ -38,7 +38,7 @@ function Register({ register, isAuthenticated }) {
     <div className="container mt-5 position-relative">
       <div style={{ display: "none" }} className="alert alert-danger"></div>
       <h1>Register</h1>
-      <p>Register for your TODO App account</p>
+      <p>Register for your Learning Log account</p>
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">Username:</label>
         <input

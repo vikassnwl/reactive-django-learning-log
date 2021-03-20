@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 import PrivateRoute from "./hocs/PrivateRoute";
 import Register from "./containers/Register";
+import Entries from "./containers/Entries";
 
 export default class App extends Component {
   render() {
@@ -17,10 +18,11 @@ export default class App extends Component {
         <Router>
           <Layout>
             <Route exact path="/" component={Home} />
+            <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute
               exact
-              path="/dashboard/:parent_id"
-              component={Dashboard}
+              path="/dashboard/:topic_id"
+              component={Entries}
             />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />

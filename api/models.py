@@ -4,24 +4,13 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
-class Task(models.Model):
-    ITEM_CHOICES = (
-        ('task', 'Task'),
-        ('file', 'File'),
-        ('folder', 'Folder')
-    )
-
-    item_type = models.CharField(
-        max_length=10, choices=ITEM_CHOICES, default='task')
-    item_name = models.CharField(max_length=200)
-    isCompleted = models.BooleanField(default=False)
+class Topic(models.Model):
+    name = models.CharField(max_length=200)
     created_on = models.DateTimeField(auto_now_add=True)
-    parent_id = models.IntegerField(default=0)
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='tasks')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    class Meta:
-        ordering = ('created_on',)
 
-    def __str__(self):
-        return self.item_name
+class Entry(models.Model):
+    content = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)

@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Task
-from .serializers import TaskSerializer, UserSerializer
+from .models import Topic, Entry
+from .serializers import TopicSerializer, UserSerializer, EntrySerializer
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.files.storage import default_storage
@@ -14,48 +14,65 @@ from .utils import handleThumbnail
 # Create your views here.
 
 
-class TasksView(APIView):
+class TopicsView(APIView):
     def get(self, request, format=None):
-        tasks = Task.objects.all()
-        serializer = TaskSerializer(tasks, many=True)
+        topics = Topic.objects.all()
+        serializer = TopicSerializer(topics, many=True)
         return Response(serializer.data)
 
 
-class DeleteTaskView(APIView):
+class EntriesView(APIView):
+    def get(self, request, format=None):
+        entries = Entry.objects.all()
+        serializer = EntrySerializer(entries, many=True)
+        return Response(serializer.data)
 
-    def delete_recursively(self, tasks):
-        for task in tasks:
-            tasks_ = Task.objects.filter(parent_id=task.id)
-            task.delete()
-            if tasks_:
-                return self.delete_recursively(tasks_)
+
+class DeleteTopicView(APIView):
 
     def delete(self, request, format=None, pk=None):
-        task = Task.objects.get(pk=pk)
-        if task.item_type == 'file':
-            file, ext = os.path.splitext(task.item_name)
-            default_storage.delete(task.item_name)
-            default_storage.delete(file+'-thumb'+ext)
-
-        tasks = Task.objects.filter(parent_id=pk)
-        self.delete_recursively(tasks)
-
-        task.delete()
-        return Response('Task deleted successfully')
+        topic = Topic.objects.get(pk=pk)
+        topic.delete()
+        return Response('Topic deleted successfully')
 
 
-class CreateTaskView(APIView):
+class DeleteEntryView(APIView):
+
+    def delete(self, request, format=None, pk=None):
+        entry = Entry.objects.get(pk=pk)
+        entry.delete()
+        return Response('Entry deleted successfully')
+
+
+class CreateTopicView(APIView):
     def post(self, request, format=None):
-        serializer = TaskSerializer(data=self.request.data)
+        serializer = TopicSerializer(data=self.request.data)
         if serializer.is_valid():
             serializer.save()
         return Response(serializer.data)
 
 
-class UpdateTaskView(APIView):
+class CreateEntryView(APIView):
+    def post(self, request, format=None):
+        serializer = EntrySerializer(data=self.request.data)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data)
+
+
+class UpdateTopicView(APIView):
     def post(self, request, format=None, pk=None):
-        task = Task.objects.get(pk=pk)
-        serializer = TaskSerializer(instance=task, data=self.request.data)
+        topic = Topic.objects.get(pk=pk)
+        serializer = TopicSerializer(instance=topic, data=self.request.data)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data)
+
+
+class UpdateEntryView(APIView):
+    def post(self, request, format=None, pk=None):
+        entry = Entry.objects.get(pk=pk)
+        serializer = EntrySerializer(instance=entry, data=self.request.data)
         if serializer.is_valid():
             serializer.save()
         return Response(serializer.data)

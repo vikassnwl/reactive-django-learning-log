@@ -33,13 +33,13 @@ function Login({ login, isAuthenticated }) {
     login(username, password, alert, loader);
   };
 
-  if (isAuthenticated) return <Redirect to="/dashboard/0" />;
+  if (isAuthenticated) return <Redirect to="/dashboard" />;
 
   return (
     <div className="container mt-5 position-relative">
       <div style={{ display: "none" }} className="alert alert-danger"></div>
       <h1 className="display-6">Login</h1>
-      <p>Login to your TODO App account</p>
+      <p>Login to your Learning Log account</p>
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">Username:</label>
         <input

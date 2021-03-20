@@ -15,7 +15,7 @@ function Navbar({ logout, isAuthenticated, user_name }) {
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
         <Link class="navbar-brand" to="/">
-          Notes
+          Learning Log
         </Link>
         <button
           class="navbar-toggler"
@@ -33,7 +33,7 @@ function Navbar({ logout, isAuthenticated, user_name }) {
             {isAuthenticated ? (
               <>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/dashboard/0">
+                  <NavLink className="nav-link" to="/dashboard">
                     Dashboard <span className="sr-only">(current)</span>
                   </NavLink>
                 </li>

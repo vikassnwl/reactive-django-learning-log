@@ -6,8 +6,8 @@ import $ from "jquery";
 import { thumb_name } from "../utils";
 import { Link } from "react-router-dom";
 
-function Dashboard(props) {
-  const [topics, setTopics] = useState([]);
+function Entries(props) {
+  const [entries, setEntries] = useState([]);
   const [text, setText] = useState("");
   const [editing, setEditing] = useState(false);
   const [id, setId] = useState(null);
@@ -16,7 +16,7 @@ function Dashboard(props) {
 
   const inputRef = useRef(null);
 
-  const { parent_id } = props.match.params;
+  const { topic_id } = props.match.params;
 
   const config = {
     headers: {
@@ -28,7 +28,10 @@ function Dashboard(props) {
     $(".loader, .overlay").css("display", "block");
     axios.get("/api/users/" + props.user_id + "/").then((res) => {
       $(".loader, .overlay").css("display", "none");
-      setTopics(res.data.topic_set);
+      //   console.log(res.data.topic_set.filter((topic) => topic.id == topic_id));
+      setEntries(
+        res.data.topic_set.filter((topic) => topic.id == topic_id)[0].entry_set
+      );
       setText("");
       setEditing(false);
     });
@@ -38,10 +41,10 @@ function Dashboard(props) {
     refreshList();
   }, []);
 
-  const handleDelete = (topic) => {
-    if (window.confirm(`'${topic.name}' will be deleted`)) {
+  const handleDelete = (entry) => {
+    if (window.confirm(`'${entry.content}' will be deleted`)) {
       $(".loader, .overlay").css("display", "block");
-      axios.delete("/api/delete-topic/" + topic.id + "/", config).then(() => {
+      axios.delete("/api/delete-entry/" + entry.id + "/", config).then(() => {
         $(".loader, .overlay").css("display", "none");
 
         refreshList();
@@ -53,12 +56,12 @@ function Dashboard(props) {
     e.preventDefault();
 
     const data = {
-      name: text,
-      user: props.user_id,
+      content: text,
+      topic: topic_id,
     };
-    let url = "/api/create-topic/";
+    let url = "/api/create-entry/";
     if (editing) {
-      url = "/api/update-topic/" + id + "/";
+      url = "/api/update-entry/" + id + "/";
     }
 
     $(".loader, .overlay").css("display", "block");
@@ -68,10 +71,10 @@ function Dashboard(props) {
     });
   };
 
-  const handleUpdate = (topic) => {
-    setText(topic.name);
+  const handleUpdate = (entry) => {
+    setText(entry.content);
     setEditing(true);
-    setId(topic.id);
+    setId(entry.id);
   };
 
   // $(".loader, .overlay").css("display", "block");
@@ -82,39 +85,32 @@ function Dashboard(props) {
 
   return (
     <div className="container mt-5">
-      <h1 className="display-4">Topics</h1>
+      <h1 className="display-4">Entries</h1>
 
       <form onSubmit={handleSubmit}>
-        <input
+        <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          type="text"
           className="form-control mb-2"
-          placeholder="New Topic"
+          placeholder="New Entry"
         />
 
         <button className="btn btn-outline-primary fa fa-send me-2" />
       </form>
 
       <ul className="list-group mt-5">
-        {topics.map((topic) => (
-          <li key={topic.id} className="list-group-item">
-            <Link
-              to={`/dashboard/${topic.id}`}
-              style={{ textDecoration: "none" }}
-            >
-              <i className="fa fa-folder-o me-2" />
-              {topic.name}
-            </Link>
+        {entries.map((entry) => (
+          <li key={entry.id} className="list-group-item">
+            {entry.content}
 
             <span style={{ float: "right" }}>
               <button
-                onClick={() => handleUpdate(topic)}
+                onClick={() => handleUpdate(entry)}
                 className="fa fa-edit btn btn-outline-info me-2"
               />
 
               <button
-                onClick={() => handleDelete(topic)}
+                onClick={() => handleDelete(entry)}
                 className="fa fa-trash btn btn-outline-danger"
               />
             </span>
@@ -128,4 +124,4 @@ const mapStateToProps = (state) => ({
   user_id: state.user_id,
 });
 
-export default connect(mapStateToProps, {})(Dashboard);
+export default connect(mapStateToProps, {})(Entries);
