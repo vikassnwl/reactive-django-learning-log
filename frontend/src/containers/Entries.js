@@ -77,11 +77,18 @@ function Entries(props) {
     setId(entry.id);
   };
 
-  // $(".loader, .overlay").css("display", "block");
-  // axios.post("/api/update-task/" + task.id + "/", data, config).then(() => {
-  //   $(".loader, .overlay").css("display", "none");
-  //   refreshList();
-  // });
+  const handleLinks = (words) => {
+    let result = [];
+    for (let word of words.split(" ")) {
+      console.log(word);
+      if (word.includes("://")) {
+        console.log("in if block");
+        word = `<a target="_blank" href='${word}'>${word}</a>`;
+      }
+      result.push(word);
+    }
+    return result.join(" ");
+  };
 
   return (
     <div className="container mt-5">
@@ -101,7 +108,11 @@ function Entries(props) {
       <ul className="list-group mt-5">
         {entries.map((entry) => (
           <li key={entry.id} className="list-group-item">
-            {entry.content}
+            <div
+              dangerouslySetInnerHTML={{
+                __html: handleLinks(entry.content).replaceAll("\n", "<br />"),
+              }}
+            />
 
             <span style={{ float: "right" }}>
               <button
