@@ -113,7 +113,7 @@ function Entries(props) {
         {entries.map((entry) => (
           <li key={entry.id} className="list-group-item">
             <div
-              style={{ display: "inline" }}
+              style={{ display: "inline", wordWrap: "break-word" }}
               dangerouslySetInnerHTML={{
                 __html: handleLinks(
                   entry.content
