@@ -28,7 +28,7 @@ function Entries(props) {
     $(".loader, .overlay").css("display", "block");
     axios.get("/api/users/" + props.user_id + "/").then((res) => {
       $(".loader, .overlay").css("display", "none");
-      //   console.log(res.data.topic_set.filter((topic) => topic.id == topic_id));
+
       setEntries(
         res.data.topic_set.filter((topic) => topic.id == topic_id)[0].entry_set
       );
@@ -78,16 +78,20 @@ function Entries(props) {
   };
 
   const handleLinks = (words) => {
+    let result2 = [];
     let result = [];
-    for (let word of words.split(" ")) {
-      console.log(word);
-      if (word.includes("://")) {
-        console.log("in if block");
-        word = `<a target="_blank" href='${word}'>${word}</a>`;
+    for (let word of words.split("<br />")) {
+      for (let word2 of word.split("&nbsp;")) {
+        if (word2.includes("://")) {
+          word2 = `<a target="_blank" href='${word2}'>${word2}</a>`;
+        }
+        result.push(word2);
       }
-      result.push(word);
+      result2.push(result.join("&nbsp;"));
+      result = [];
     }
-    return result.join(" ");
+
+    return result2.join("<br />");
   };
 
   return (
@@ -109,8 +113,13 @@ function Entries(props) {
         {entries.map((entry) => (
           <li key={entry.id} className="list-group-item">
             <div
+              style={{ display: "inline" }}
               dangerouslySetInnerHTML={{
-                __html: handleLinks(entry.content).replaceAll("\n", "<br />"),
+                __html: handleLinks(
+                  entry.content
+                    .replaceAll(" ", "&nbsp;")
+                    .replaceAll("\n", "<br />")
+                ),
               }}
             />
 
