@@ -100,7 +100,8 @@ function Entries(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (e.target.querySelector("input").value) {
+    console.log(e.target.querySelector("input").value);
+    if (fileName) {
       const fd = new FormData();
       console.log(e.target.querySelector("input").value);
 
