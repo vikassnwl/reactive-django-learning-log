@@ -12,7 +12,10 @@ function Navbar({ logout, isAuthenticated, user_name }) {
     }
   };
   return (
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav
+      style={{ height: "8vh" }}
+      class="navbar navbar-expand-lg navbar-light bg-light"
+    >
       <div class="container-fluid">
         <Link class="navbar-brand" to="/">
           Learning Log

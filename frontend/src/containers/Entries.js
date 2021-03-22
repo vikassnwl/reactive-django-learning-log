@@ -22,6 +22,55 @@ function Entries(props) {
     },
   };
 
+  // ================Dragging logic goes here==============
+  const draggables = document.querySelectorAll(".draggable");
+  const containers = document.querySelectorAll(".draggable-container");
+
+  draggables.forEach((draggable) => {
+    draggable.addEventListener("dragstart", () => {
+      draggable.classList.add("dragging");
+    });
+    draggable.addEventListener("dragend", () => {
+      draggable.classList.remove("dragging");
+    });
+  });
+
+  containers.forEach((container) => {
+    container.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      const afterElement = getDragAfterElement(container, e.clientY);
+      const draggable = document.querySelector(".dragging");
+
+      if (afterElement == null) {
+        container.appendChild(draggable);
+      } else {
+        container.insertBefore(draggable, afterElement);
+      }
+    });
+  });
+
+  function getDragAfterElement(container, y) {
+    const draggableElements = [
+      ...container.querySelectorAll(".draggable:not(.dragging)"),
+    ];
+    return draggableElements.reduce(
+      (closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      },
+      {
+        offset: Number.NEGATIVE_INFINITY,
+      }
+    ).element;
+  }
+  // ================Dragging logic ends here==================
+
   const refreshList = () => {
     $(".loader, .overlay").css("display", "block");
     axios.get("/api/users/" + props.user_id + "/").then((res) => {
@@ -30,6 +79,7 @@ function Entries(props) {
       setTopic(res.data.topic_set.filter((topic) => topic.id == topic_id)[0]);
       setText("");
       setEditing(false);
+      setFileName("");
     });
   };
 
@@ -51,12 +101,15 @@ function Entries(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (e.target.querySelector("input").value) {
-      e.target.querySelector("input").value = "";
       const fd = new FormData();
-      console.log(e);
+      console.log(e.target.querySelector("input").value);
 
       fd.append("myFile", file, file.name);
+
+      $(".loader, .overlay").css("display", "block");
       axios.post("/api/save-file/", fd, config).then((res) => {
+        $(".loader, .overlay").css("display", "none");
+
         const data = {
           content: text,
           topic: topic_id,
@@ -78,7 +131,7 @@ function Entries(props) {
       const data = {
         content: text,
         topic: topic_id,
-        image: fileName,
+        image: file.name,
       };
 
       let url = "/api/create-entry/";
@@ -96,7 +149,6 @@ function Entries(props) {
         refreshList();
       });
     }
-    setFileName("");
   };
 
   const handleUpdate = (entry) => {
@@ -164,10 +216,19 @@ function Entries(props) {
   };
 
   return (
-    <div className="container mt-5">
-      <h1 className="display-4">Entries</h1>
+    <div className="container">
+      <form
+        style={{ height: "27vh", marginTop: "5vh" }}
+        onSubmit={handleSubmit}
+      >
+        <h1 className="display-4">{topic.name}</h1>
 
-      <form onSubmit={handleSubmit}>
+        <input
+          onChange={handleFileChange}
+          ref={inputRef}
+          type="file"
+          style={{ display: "none" }}
+        />
         {topic.type === "tasks" ? (
           <input
             type="text"
@@ -199,9 +260,24 @@ function Entries(props) {
         {fileName}
       </form>
 
-      <ul className="list-group mt-5">
+      <ul
+        style={{ overflowY: "scroll", height: "57vh" }}
+        className={
+          topic.type === "tasks"
+            ? "list-group  draggable-container entry-container"
+            : "list-group  entry-container"
+        }
+      >
         {topic.entry_set.map((entry) => (
-          <li key={entry.id} className="list-group-item">
+          <li
+            draggable={topic.type === "tasks" && "true"}
+            key={entry.id}
+            className={
+              topic.type === "tasks"
+                ? "list-group-item draggable"
+                : "list-group-item"
+            }
+          >
             {topic.type === "tasks" ? (
               <span
                 onClick={() => handleStrike(entry)}

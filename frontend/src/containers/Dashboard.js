@@ -75,10 +75,13 @@ function Dashboard(props) {
   };
 
   return (
-    <div className="container mt-5">
-      <h1 className="display-4">Topics</h1>
+    <div className="container">
+      <form
+        style={{ height: "27vh", marginTop: "5vh" }}
+        onSubmit={handleSubmit}
+      >
+        <h1 className="display-4">Topics</h1>
 
-      <form onSubmit={handleSubmit}>
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -95,7 +98,10 @@ function Dashboard(props) {
         </select>
       </form>
 
-      <ul className="list-group mt-5">
+      <ul
+        style={{ height: "57vh", overflowY: "scroll" }}
+        className="list-group topic-container"
+      >
         {topics.map((topic) => (
           <li key={topic.id} className="list-group-item">
             <Link
