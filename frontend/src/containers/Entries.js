@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { connect } from "react-redux";
 import $ from "jquery";
+import { thumb_name } from "../utils";
 
 function Entries(props) {
   const [topic, setTopic] = useState({ entry_set: [] });
   const [text, setText] = useState("");
   const [editing, setEditing] = useState(false);
   const [id, setId] = useState(null);
+  const inputRef = useRef(null);
+  const [file, setFile] = useState("");
+  const [fileName, setFileName] = useState("");
 
   const { topic_id } = props.match.params;
 
@@ -46,24 +50,65 @@ function Entries(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (e.target.querySelector("input").value) {
+      e.target.querySelector("input").value = "";
+      const fd = new FormData();
+      console.log(e);
 
-    const data = {
-      content: text,
-      topic: topic_id,
-    };
-    let url = "/api/create-entry/";
-    if (editing) {
-      url = "/api/update-entry/" + id + "/";
+      fd.append("myFile", file, file.name);
+      axios.post("/api/save-file/", fd, config).then((res) => {
+        const data = {
+          content: text,
+          topic: topic_id,
+          image: res.data,
+        };
+
+        let url = "/api/create-entry/";
+        if (editing) {
+          url = "/api/update-entry/" + id + "/";
+        }
+
+        $(".loader, .overlay").css("display", "block");
+        axios.post(url, data, config).then(() => {
+          $(".loader, .overlay").css("display", "none");
+          refreshList();
+        });
+      });
+    } else {
+      const data = {
+        content: text,
+        topic: topic_id,
+        image: fileName,
+      };
+
+      let url = "/api/create-entry/";
+      if (editing) {
+        url = "/api/update-entry/" + id + "/";
+        const data = {
+          content: text,
+          topic: topic_id,
+        };
+      }
+
+      $(".loader, .overlay").css("display", "block");
+      axios.post(url, data, config).then(() => {
+        $(".loader, .overlay").css("display", "none");
+        refreshList();
+      });
     }
-
-    $(".loader, .overlay").css("display", "block");
-    axios.post(url, data, config).then(() => {
-      $(".loader, .overlay").css("display", "none");
-      refreshList();
-    });
+    setFileName("");
   };
 
   const handleUpdate = (entry) => {
+    const fname = entry.image;
+    if (fname.length > 15) {
+      setFileName(
+        fname.substring(0, 15) + "..." + fname.substring(fname.length - 5)
+      );
+    } else {
+      setFileName(fname);
+    }
+
     setText(entry.content);
     setEditing(true);
     setId(entry.id);
@@ -101,6 +146,23 @@ function Entries(props) {
     return result2.join("<br />");
   };
 
+  const handleFileSelect = (e) => {
+    e.preventDefault();
+    inputRef.current.click();
+  };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    const fname = e.target.files[0].name;
+    if (fname.length > 15) {
+      setFileName(
+        fname.substring(0, 15) + "..." + fname.substring(fname.length - 5)
+      );
+    } else {
+      setFileName(fname);
+    }
+  };
+
   return (
     <div className="container mt-5">
       <h1 className="display-4">Entries</h1>
@@ -124,6 +186,17 @@ function Entries(props) {
         )}
 
         <button className="btn btn-outline-primary fa fa-send me-2" />
+        <input
+          onChange={handleFileChange}
+          ref={inputRef}
+          type="file"
+          style={{ display: "none" }}
+        />
+        <button
+          onClick={handleFileSelect}
+          className="btn btn-outline-secondary fa fa-paperclip me-2"
+        />
+        {fileName}
       </form>
 
       <ul className="list-group mt-5">
@@ -147,17 +220,27 @@ function Entries(props) {
                 }}
               />
             ) : (
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: handleLinks(
-                    entry.content
-                      .split(" ")
-                      .join("&nbsp;")
-                      .split("\n")
-                      .join("<br />")
-                  ),
-                }}
-              />
+              <>
+                {entry.image && (
+                  <img
+                    style={{ display: "block" }}
+                    className="mb-2"
+                    src={`/api/media/${thumb_name(entry.image)}/`}
+                  />
+                )}
+
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: handleLinks(
+                      entry.content
+                        .split(" ")
+                        .join("&nbsp;")
+                        .split("\n")
+                        .join("<br />")
+                    ),
+                  }}
+                />
+              </>
             )}
 
             <span style={{ float: "right" }}>

@@ -37,9 +37,12 @@ class DeleteTopicView(APIView):
 
 
 class DeleteEntryView(APIView):
-
     def delete(self, request, format=None, pk=None):
         entry = Entry.objects.get(pk=pk)
+        if entry.image:
+            file, ext = os.path.splitext(entry.image)
+            default_storage.delete(entry.image)
+            default_storage.delete(file+'-thumb'+ext)
         entry.delete()
         return Response('Entry deleted successfully')
 
@@ -74,7 +77,16 @@ class UpdateEntryView(APIView):
         entry = Entry.objects.get(pk=pk)
         serializer = EntrySerializer(instance=entry, data=self.request.data)
         if serializer.is_valid():
+            print(entry.image)
+            print(self.request.data['image'])
+            if entry.image == self.request.data['image']:
+                pass
+            else:
+                file, ext = os.path.splitext(entry.image)
+                default_storage.delete(entry.image)
+                default_storage.delete(file+'-thumb'+ext)
             serializer.save()
+
         return Response(serializer.data)
 
 
