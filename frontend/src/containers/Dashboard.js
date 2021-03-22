@@ -75,11 +75,8 @@ function Dashboard(props) {
   };
 
   return (
-    <div className="container">
-      <form
-        style={{ height: "27vh", marginTop: "5vh" }}
-        onSubmit={handleSubmit}
-      >
+    <div className="container mt-5">
+      <form onSubmit={handleSubmit}>
         <h1 className="display-4">Topics</h1>
 
         <input
@@ -98,10 +95,7 @@ function Dashboard(props) {
         </select>
       </form>
 
-      <ul
-        style={{ height: "57vh", overflowY: "scroll" }}
-        className="list-group topic-container"
-      >
+      <ul className="list-group mt-5">
         {topics.map((topic) => (
           <li key={topic.id} className="list-group-item">
             <Link

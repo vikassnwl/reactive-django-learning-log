@@ -100,11 +100,10 @@ function Entries(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e.target.querySelector("input").value);
+
     if (fileName) {
       const fd = new FormData();
-      console.log(e.target.querySelector("input").value);
-
+      console.log(fileName);
       fd.append("myFile", file, file.name);
 
       $(".loader, .overlay").css("display", "block");
@@ -132,7 +131,7 @@ function Entries(props) {
       const data = {
         content: text,
         topic: topic_id,
-        image: file.name,
+        image: fileName,
       };
 
       let url = "/api/create-entry/";
@@ -217,13 +216,10 @@ function Entries(props) {
   };
 
   return (
-    <div className="container">
-      <form
-        style={{ height: "27vh", marginTop: "5vh" }}
-        onSubmit={handleSubmit}
-      >
-        <h1 className="display-4">{topic.name}</h1>
+    <div className="container mt-5">
+      <h1 className="display-4">{topic.name}</h1>
 
+      <form onSubmit={handleSubmit}>
         <input
           onChange={handleFileChange}
           ref={inputRef}
@@ -262,11 +258,10 @@ function Entries(props) {
       </form>
 
       <ul
-        style={{ overflowY: "scroll", height: "57vh" }}
         className={
           topic.type === "tasks"
-            ? "list-group  draggable-container entry-container"
-            : "list-group  entry-container"
+            ? "list-group mt-5 draggable-container"
+            : "list-group mt-5"
         }
       >
         {topic.entry_set.map((entry) => (

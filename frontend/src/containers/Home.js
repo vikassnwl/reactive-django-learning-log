@@ -8,6 +8,10 @@ function Home({ isAuthenticated }) {
       <div className="bg-light p-3 p-lg-5">
         <h1 className="display-4">Welcome to Learning Log</h1>
         <p className="lead">Developed with React and Django</p>
+        <p className="alert alert-info">
+          Learning Log helps you keep track of your learning, for any topic
+          you're learning about.
+        </p>
         <hr className="my-4" />
         {isAuthenticated ? (
           <>
