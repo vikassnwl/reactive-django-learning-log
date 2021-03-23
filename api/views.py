@@ -81,6 +81,8 @@ class UpdateEntryView(APIView):
             print(self.request.data['image'])
             if entry.image == self.request.data['image']:
                 pass
+            elif not entry.image:
+                pass
             else:
                 file, ext = os.path.splitext(entry.image)
                 default_storage.delete(entry.image)

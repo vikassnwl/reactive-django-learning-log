@@ -80,6 +80,7 @@ function Entries(props) {
       setText("");
       setEditing(false);
       setFileName("");
+      setFile("");
     });
   };
 
@@ -101,7 +102,7 @@ function Entries(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (fileName) {
+    if (file) {
       const fd = new FormData();
       console.log(fileName);
       fd.append("myFile", file, file.name);
