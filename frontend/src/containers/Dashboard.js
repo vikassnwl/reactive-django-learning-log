@@ -97,7 +97,11 @@ function Dashboard(props) {
 
       <ul className="list-group mt-5">
         {topics.map((topic) => (
-          <li key={topic.id} className="list-group-item">
+          <li
+            style={{ wordWrap: "break-word" }}
+            key={topic.id}
+            className="list-group-item"
+          >
             <Link
               to={`/dashboard/${topic.id}`}
               style={{ textDecoration: "none" }}

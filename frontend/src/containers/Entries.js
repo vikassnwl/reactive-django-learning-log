@@ -251,10 +251,13 @@ function Entries(props) {
           type="file"
           style={{ display: "none" }}
         />
-        <button
-          onClick={handleFileSelect}
-          className="btn btn-outline-secondary fa fa-paperclip me-2"
-        />
+        {topic.type !== "tasks" && (
+          <button
+            onClick={handleFileSelect}
+            className="btn btn-outline-secondary fa fa-paperclip me-2"
+          />
+        )}
+
         {fileName}
       </form>
 
@@ -267,6 +270,7 @@ function Entries(props) {
       >
         {topic.entry_set.map((entry) => (
           <li
+            style={{ wordWrap: "break-word" }}
             draggable={topic.type === "tasks" && "true"}
             key={entry.id}
             className={
@@ -317,6 +321,14 @@ function Entries(props) {
             )}
 
             <span style={{ float: "right" }}>
+              {entry.image && (
+                <a
+                  href={`/api/media/${entry.image}/`}
+                  target="_blank"
+                  className="fa fa-eye btn btn-outline-success me-2"
+                />
+              )}
+
               <button
                 onClick={() => handleUpdate(entry)}
                 className="fa fa-edit btn btn-outline-info me-2"
