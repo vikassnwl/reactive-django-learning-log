@@ -190,7 +190,7 @@ function Entries(props) {
         if (word2.includes("://")) {
           word2 = `<a target="_blank" href='${word2}'>${word2}</a>`;
         }
-        result.push(word2);
+        result.push(word2.replace(/-/g, "&#8209;"));
       }
       result2.push(result.join("&nbsp;"));
       result = [];
