@@ -251,12 +251,12 @@ function Entries(props) {
           type="file"
           style={{ display: "none" }}
         />
-        {topic.type !== "tasks" && (
+        {/* {topic.type !== "tasks" && (
           <button
             onClick={handleFileSelect}
             className="btn btn-outline-secondary fa fa-paperclip me-2"
           />
-        )}
+        )} */}
 
         {fileName}
       </form>
