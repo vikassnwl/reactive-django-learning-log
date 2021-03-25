@@ -250,10 +250,11 @@ function Entries(props) {
           />
         )}
 
-        {fileName &&
-          fileName.substring(0, 15) +
+        {fileName && fileName.length > 23
+          ? fileName.substring(0, 15) +
             "..." +
-            fileName.substring(fileName.length - 5)}
+            fileName.substring(fileName.length - 5)
+          : fileName}
       </form>
 
       <ul
