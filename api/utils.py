@@ -22,7 +22,7 @@ dbx = dropbox.Dropbox(os.environ.get('DBX_TOKEN'))
 
 
 def upload_file(file, fname):
-    file_location = f'/PythonFileUpload/{fname}'
+    file_location = f'/{fname}'
     BASE_DIR = Path(__file__).resolve().parent.parent
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     fp = os.path.join(MEDIA_ROOT, fname)
