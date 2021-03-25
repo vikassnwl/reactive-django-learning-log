@@ -114,7 +114,9 @@ function Entries(props) {
         const data = {
           content: text,
           topic: topic_id,
-          image: res.data,
+          image: res.data["image_name"],
+          image_url: res.data["image_url"],
+          thumb_url: res.data["thumb_url"],
         };
 
         let url = "/api/create-entry/";
@@ -294,13 +296,21 @@ function Entries(props) {
               />
             ) : (
               <>
-                {entry.image && (
-                  <img
-                    style={{ display: "block" }}
-                    className="mb-2"
-                    src={`/api/media/${thumb_name(entry.image)}/`}
-                  />
-                )}
+                {
+                  entry.image && (
+                    <img
+                      style={{ display: "block" }}
+                      className="mb-2"
+                      src={
+                        entry.thumb_url.substring(
+                          0,
+                          entry.thumb_url.length - 4
+                        ) + "raw=1"
+                      }
+                    />
+                  )
+                  // https://www.dropbox.com/s/o4uaw9esvz02six/cart.png?raw=1
+                }
 
                 <span
                   dangerouslySetInnerHTML={{
@@ -319,7 +329,10 @@ function Entries(props) {
             <span style={{ float: "right" }}>
               {entry.image && (
                 <a
-                  href={`/api/media/${entry.image}/`}
+                  href={
+                    entry.image_url.substring(0, entry.image_url.length - 4) +
+                    "raw=1"
+                  }
                   target="_blank"
                   className="fa fa-eye btn btn-outline-success me-2"
                 />

@@ -23,6 +23,8 @@ class Entry(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     isCompleted = models.BooleanField(default=False)
     image = models.CharField(max_length=200, blank=True)
+    image_url = models.TextField(blank=True)
+    thumb_url = models.TextField(blank=True)
 
     class Meta:
         ordering = ('created_on',)

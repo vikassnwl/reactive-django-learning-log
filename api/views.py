@@ -8,7 +8,7 @@ from django.core.files.storage import default_storage
 from PIL import Image
 import os
 from pathlib import Path
-from .utils import handleThumbnail
+from .utils import handleThumbnail, upload_file, delete_file
 
 
 # Create your views here.
@@ -42,7 +42,16 @@ class DeleteEntryView(APIView):
         if entry.image:
             file, ext = os.path.splitext(entry.image)
             default_storage.delete(entry.image)
+            try:
+                delete_file(entry.image)
+            except:
+                pass
             default_storage.delete(file+'-thumb'+ext)
+            try:
+                delete_file(file+'-thumb'+ext)
+            except:
+                pass
+
         entry.delete()
         return Response('Entry deleted successfully')
 
@@ -154,6 +163,9 @@ class RegisterView(APIView):
 class SaveFileView(APIView):
     def post(self, request, format=None):
         file = self.request.FILES['myFile']
-        file_name = default_storage.save(file.name, file)
-        handleThumbnail(file, file_name, (100, 100))
-        return Response(file_name)
+        file_name = file.name
+        # file_name = default_storage.save(file.name, file)
+        image_url = upload_file(file, file_name)
+        thumb, thumb_name = handleThumbnail(file, file_name, (100, 100))
+        thumb_url = upload_file(thumb, thumb_name)
+        return Response({'image_name': file_name, 'image_url': image_url, 'thumb_url': thumb_url})
