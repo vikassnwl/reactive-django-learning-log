@@ -138,10 +138,6 @@ function Entries(props) {
       let url = "/api/create-entry/";
       if (editing) {
         url = "/api/update-entry/" + id + "/";
-        const data = {
-          content: text,
-          topic: topic_id,
-        };
       }
 
       $(".loader, .overlay").css("display", "block");
@@ -155,9 +151,7 @@ function Entries(props) {
   const handleUpdate = (entry) => {
     const fname = entry.image;
     if (fname.length > 15) {
-      setFileName(
-        fname.substring(0, 15) + "..." + fname.substring(fname.length - 5)
-      );
+      setFileName(fname);
     } else {
       setFileName(fname);
     }
@@ -208,9 +202,7 @@ function Entries(props) {
     setFile(e.target.files[0]);
     const fname = e.target.files[0].name;
     if (fname.length > 15) {
-      setFileName(
-        fname.substring(0, 15) + "..." + fname.substring(fname.length - 5)
-      );
+      setFileName(fname);
     } else {
       setFileName(fname);
     }
@@ -258,7 +250,10 @@ function Entries(props) {
           />
         )}
 
-        {fileName}
+        {fileName &&
+          fileName.substring(0, 15) +
+            "..." +
+            fileName.substring(fileName.length - 5)}
       </form>
 
       <ul
