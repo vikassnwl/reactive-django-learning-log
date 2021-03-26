@@ -25,6 +25,7 @@ class Entry(models.Model):
     image = models.CharField(max_length=200, blank=True)
     image_url = models.TextField(blank=True)
     thumb_url = models.TextField(blank=True)
+    image_data = models.TextField(blank=True)
 
     class Meta:
         ordering = ('created_on',)

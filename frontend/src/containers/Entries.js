@@ -13,6 +13,7 @@ function Entries(props) {
   const inputRef = useRef(null);
   const [file, setFile] = useState("");
   const [fileName, setFileName] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
 
   const { topic_id } = props.match.params;
 
@@ -104,7 +105,7 @@ function Entries(props) {
 
     if (file) {
       const fd = new FormData();
-      console.log(fileName);
+
       fd.append("myFile", file, file.name);
 
       $(".loader, .overlay").css("display", "block");
@@ -117,6 +118,7 @@ function Entries(props) {
           image: res.data["image_name"],
           image_url: res.data["image_url"],
           thumb_url: res.data["thumb_url"],
+          // image_data: image_data,
         };
 
         let url = "/api/create-entry/";
@@ -329,6 +331,7 @@ function Entries(props) {
             <span style={{ float: "right" }}>
               {entry.image && (
                 <button
+                  onClick={() => setImageUrl(entry.image_url)}
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
                   // onClick={() =>
@@ -391,12 +394,13 @@ function Entries(props) {
                   </div>
                   <div class="modal-body">
                     <img
-                      src={
-                        entry.image_url.substring(
-                          0,
-                          entry.image_url.length - 4
-                        ) + "raw=1"
-                      }
+                      src={imageUrl.substring(0, imageUrl.length - 4) + "raw=1"}
+                      style={{
+                        width: "100%",
+                        position: "relative",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                      }}
                     />
                   </div>
                   {/* <div class="modal-footer">
