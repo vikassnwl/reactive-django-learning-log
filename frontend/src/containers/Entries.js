@@ -328,14 +328,23 @@ function Entries(props) {
 
             <span style={{ float: "right" }}>
               {entry.image && (
-                <a
-                  href={
-                    entry.image_url.substring(0, entry.image_url.length - 4) +
-                    "raw=1"
+                <button
+                  onClick={() =>
+                    window.open(
+                      entry.image_url.substring(0, entry.image_url.length - 4) +
+                        "raw=1"
+                    )
                   }
-                  target="_blank"
                   className="fa fa-eye btn btn-outline-success me-2"
                 />
+                // <a
+                //   href={
+                // entry.image_url.substring(0, entry.image_url.length - 4) +
+                // "raw=1"
+                //   }
+                //   target="_blank"
+                //   className="fa fa-eye btn btn-outline-success me-2"
+                // />
               )}
 
               <button
