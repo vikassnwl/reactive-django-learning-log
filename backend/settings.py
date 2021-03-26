@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api',
     'rest_framework',
-    'easy_thumbnails'
 ]
 
 MIDDLEWARE = [
