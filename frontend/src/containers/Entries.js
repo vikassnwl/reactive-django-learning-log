@@ -188,7 +188,8 @@ function Entries(props) {
         if (word2.includes("://")) {
           word2 = `<a target="_blank" href='${word2}'>${word2}</a>`;
         }
-        result.push(word2.replace(/-/g, "&#8209;"));
+        result.push(word2);
+        // result.push(word2.replace(/-/g, "&#8209;"));
       }
       result2.push(result.join("&nbsp;"));
       result = [];
@@ -295,7 +296,9 @@ function Entries(props) {
                       .join("<br />")
                   ),
                 }}
-              />
+              >
+                {/* {entry.content} */}
+              </span>
             ) : (
               <>
                 {
@@ -324,7 +327,9 @@ function Entries(props) {
                         .join("<br />")
                     ),
                   }}
-                />
+                >
+                  {/* <pre>{entry.content}</pre> */}
+                </span>
               </>
             )}
 
@@ -395,12 +400,12 @@ function Entries(props) {
                   <div class="modal-body">
                     <img
                       src={imageUrl.substring(0, imageUrl.length - 4) + "raw=1"}
-                      style={{
-                        width: "100%",
-                        position: "relative",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                      }}
+                      // style={{
+                      //   width: "100%",
+                      //   position: "relative",
+                      //   top: "50%",
+                      //   transform: "translateY(-50%)",
+                      // }}
                     />
                   </div>
                   {/* <div class="modal-footer">
