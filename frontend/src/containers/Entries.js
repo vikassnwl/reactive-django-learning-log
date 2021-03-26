@@ -329,12 +329,14 @@ function Entries(props) {
             <span style={{ float: "right" }}>
               {entry.image && (
                 <button
-                  onClick={() =>
-                    window.open(
-                      entry.image_url.substring(0, entry.image_url.length - 4) +
-                        "raw=1"
-                    )
-                  }
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                  // onClick={() =>
+                  //   window.open(
+                  //     entry.image_url.substring(0, entry.image_url.length - 4) +
+                  //       "raw=1"
+                  //   )
+                  // }
                   className="fa fa-eye btn btn-outline-success me-2"
                 />
                 // <a
@@ -357,6 +359,61 @@ function Entries(props) {
                 className="fa fa-trash btn btn-outline-danger"
               />
             </span>
+
+            {/* <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
+              Launch demo modal
+            </button> */}
+
+            <div
+              class="modal fade"
+              id="exampleModal"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    {/* <h5 class="modal-title" id="exampleModalLabel">
+                      Modal title
+                    </h5> */}
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <img
+                      src={
+                        entry.image_url.substring(
+                          0,
+                          entry.image_url.length - 4
+                        ) + "raw=1"
+                      }
+                    />
+                  </div>
+                  {/* <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                      Save changes
+                    </button>
+                  </div> */}
+                </div>
+              </div>
+            </div>
           </li>
         ))}
       </ul>
