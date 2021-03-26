@@ -37,7 +37,7 @@ def upload_file(file, fname):
 
 
 def delete_file(fname):
-    file_location = f'/PythonFileUpload/{fname}'
+    file_location = f'/{fname}'
     dbx.files_delete(file_location)
 
 

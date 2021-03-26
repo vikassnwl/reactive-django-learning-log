@@ -41,16 +41,16 @@ class DeleteEntryView(APIView):
         entry = Entry.objects.get(pk=pk)
         if entry.image:
             file, ext = os.path.splitext(entry.image)
-            default_storage.delete(entry.image)
-            try:
-                delete_file(entry.image)
-            except:
-                pass
-            default_storage.delete(file+'-thumb'+ext)
-            try:
-                delete_file(file+'-thumb'+ext)
-            except:
-                pass
+            # default_storage.delete(entry.image)
+            # try:
+            delete_file(entry.image)
+            # except:
+            #     pass
+            # default_storage.delete(file+'-thumb'+ext)
+            # try:
+            delete_file(file+'-thumb'+ext)
+            # except:
+            #     pass
 
         entry.delete()
         return Response('Entry deleted successfully')
@@ -94,8 +94,10 @@ class UpdateEntryView(APIView):
                 pass
             else:
                 file, ext = os.path.splitext(entry.image)
-                default_storage.delete(entry.image)
-                default_storage.delete(file+'-thumb'+ext)
+                # default_storage.delete(entry.image)
+                # default_storage.delete(file+'-thumb'+ext)
+                delete_file(entry.image)
+                delete_file(file+'-thumb'+ext)
             serializer.save()
 
         return Response(serializer.data)
