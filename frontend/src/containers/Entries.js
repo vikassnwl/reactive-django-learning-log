@@ -11,6 +11,7 @@ function Entries(props) {
   const [editing, setEditing] = useState(false);
   const [id, setId] = useState(null);
   const inputRef = useRef(null);
+  const textRef = useRef(null);
   const [file, setFile] = useState("");
   const [fileName, setFileName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -84,9 +85,25 @@ function Entries(props) {
       setFile("");
     });
   };
+  let init_scroll_val = 0;
+  const handleScroll = () => {
+    if (document.documentElement.scrollTop > init_scroll_val + 10) {
+      $(".fa-plus").fadeOut();
+      // alert("faded out");
+      init_scroll_val = document.documentElement.scrollTop;
+    } else if (document.documentElement.scrollTop < init_scroll_val - 10) {
+      $(".fa-plus").fadeIn();
+      // alert("faded in");
+      init_scroll_val = document.documentElement.scrollTop;
+    }
+  };
 
   useEffect(() => {
     refreshList();
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const handleDelete = (entry) => {
@@ -118,7 +135,6 @@ function Entries(props) {
           image: res.data["image_name"],
           image_url: res.data["image_url"],
           thumb_url: res.data["thumb_url"],
-          // image_data: image_data,
         };
 
         let url = "/api/create-entry/";
@@ -189,7 +205,6 @@ function Entries(props) {
           word2 = `<a target="_blank" href='${word2}'>${word2}</a>`;
         }
         result.push(word2);
-        // result.push(word2.replace(/-/g, "&#8209;"));
       }
       result2.push(result.join("&nbsp;"));
       result = [];
@@ -213,11 +228,18 @@ function Entries(props) {
     }
   };
 
+  const handlePlusBtn = () => {
+    location.href = "#";
+    textRef.current.focus();
+  };
+
   return (
     <div className="container mt-5">
-      <h1 className="display-4">{topic.name}</h1>
+      <h1 id="header" className="display-4">
+        {topic.name}
+      </h1>
 
-      <form onSubmit={handleSubmit}>
+      <form id="form" onSubmit={handleSubmit}>
         <input
           onChange={handleFileChange}
           ref={inputRef}
@@ -234,6 +256,7 @@ function Entries(props) {
           />
         ) : (
           <textarea
+            ref={textRef}
             value={text}
             onChange={(e) => setText(e.target.value)}
             className="form-control mb-2"
@@ -296,26 +319,19 @@ function Entries(props) {
                       .join("<br />")
                   ),
                 }}
-              >
-                {/* {entry.content} */}
-              </span>
+              ></span>
             ) : (
               <>
-                {
-                  entry.image && (
-                    <img
-                      style={{ display: "block" }}
-                      className="mb-2"
-                      src={
-                        entry.thumb_url.substring(
-                          0,
-                          entry.thumb_url.length - 4
-                        ) + "raw=1"
-                      }
-                    />
-                  )
-                  // https://www.dropbox.com/s/o4uaw9esvz02six/cart.png?raw=1
-                }
+                {entry.image && (
+                  <img
+                    style={{ display: "block" }}
+                    className="mb-2"
+                    src={
+                      entry.thumb_url.substring(0, entry.thumb_url.length - 4) +
+                      "raw=1"
+                    }
+                  />
+                )}
 
                 <span
                   dangerouslySetInnerHTML={{
@@ -327,9 +343,7 @@ function Entries(props) {
                         .join("<br />")
                     ),
                   }}
-                >
-                  {/* <pre>{entry.content}</pre> */}
-                </span>
+                ></span>
               </>
             )}
 
@@ -339,22 +353,8 @@ function Entries(props) {
                   onClick={() => setImageUrl(entry.image_url)}
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
-                  // onClick={() =>
-                  //   window.open(
-                  //     entry.image_url.substring(0, entry.image_url.length - 4) +
-                  //       "raw=1"
-                  //   )
-                  // }
                   className="fa fa-eye btn btn-outline-success me-2"
                 />
-                // <a
-                //   href={
-                // entry.image_url.substring(0, entry.image_url.length - 4) +
-                // "raw=1"
-                //   }
-                //   target="_blank"
-                //   className="fa fa-eye btn btn-outline-success me-2"
-                // />
               )}
 
               <button
@@ -368,15 +368,6 @@ function Entries(props) {
               />
             </span>
 
-            {/* <button
-              type="button"
-              class="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
-            >
-              Launch demo modal
-            </button> */}
-
             <div
               class="modal fade"
               id="exampleModal"
@@ -387,9 +378,6 @@ function Entries(props) {
               <div class="modal-dialog modal-fullscreen">
                 <div class="modal-content">
                   <div class="modal-header">
-                    {/* <h5 class="modal-title" id="exampleModalLabel">
-                      Modal title
-                    </h5> */}
                     <button
                       type="button"
                       class="btn-close"
@@ -400,32 +388,33 @@ function Entries(props) {
                   <div class="modal-body">
                     <img
                       src={imageUrl.substring(0, imageUrl.length - 4) + "raw=1"}
-                      // style={{
-                      //   width: "100%",
-                      //   position: "relative",
-                      //   top: "50%",
-                      //   transform: "translateY(-50%)",
-                      // }}
                     />
                   </div>
-                  {/* <div class="modal-footer">
-                    <button
-                      type="button"
-                      class="btn btn-secondary"
-                      data-bs-dismiss="modal"
-                    >
-                      Close
-                    </button>
-                    <button type="button" class="btn btn-primary">
-                      Save changes
-                    </button>
-                  </div> */}
                 </div>
               </div>
             </div>
           </li>
         ))}
       </ul>
+      <i
+        onClick={handlePlusBtn}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+          width: "50px",
+          height: "50px",
+          borderRadius: "50%",
+          position: "fixed",
+          right: "0",
+          bottom: "0",
+          margin: "0px 20px 20px 0",
+          background: "blue",
+          color: "white",
+        }}
+        className="fa fa-plus"
+      ></i>
     </div>
   );
 }
