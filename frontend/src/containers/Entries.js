@@ -169,6 +169,8 @@ function Entries(props) {
   };
 
   const handleUpdate = (entry) => {
+    location.href = "#";
+    textRef.current.focus();
     const fname = entry.image;
     if (fname.length > 15) {
       setFileName(fname);
