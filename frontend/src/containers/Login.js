@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 import { login } from "../actions/auth";
 import $ from "jquery";
 
-function Login({ login, isAuthenticated }) {
+function Login(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -30,10 +30,10 @@ function Login({ login, isAuthenticated }) {
         $(".loader, .overlay").css("display", "none");
       }
     };
-    login(username, password, alert, loader);
+    props.login(username, password, alert, loader);
   };
 
-  if (isAuthenticated) return <Redirect to="/dashboard" />;
+  if (props.isAuthenticated) return <Redirect to={props.location.state.url} />;
 
   return (
     <div className="container mt-5 position-relative">
