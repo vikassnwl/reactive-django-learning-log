@@ -248,6 +248,7 @@ function Entries(props) {
         />
         {topic.type === "tasks" ? (
           <input
+            ref={textRef}
             type="text"
             value={text}
             onChange={(e) => setText(e.target.value)}
