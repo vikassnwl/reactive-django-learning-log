@@ -33,7 +33,12 @@ function Login(props) {
     props.login(username, password, alert, loader);
   };
 
-  if (props.isAuthenticated) return <Redirect to={props.location.state.url} />;
+  if (props.isAuthenticated)
+    return (
+      <Redirect
+        to={(props.location.state && props.location.state.url) || "/dashboard"}
+      />
+    );
 
   return (
     <div className="container mt-5 position-relative">
